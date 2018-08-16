@@ -14,16 +14,78 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="respiratoryRate_WatchKit_App" customModuleProvider="target">
                     <items>
-                        <button width="1" alignment="left" title="Toggle Gy" id="fSg-b5-oCi">
-                            <color key="backgroundColor" red="1" green="0.34683379889999999" blue="0.36849147180000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <label width="121" height="90" alignment="center" text="Welcome to Respiratory Rate" textAlignment="center" numberOfLines="0" id="Try-vY-c2L">
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
+                        <button width="103" alignment="center" title="Begin" id="epG-NB-HWo">
+                            <color key="backgroundColor" red="0.29803921568627451" green="0.34901960784313724" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
-                                <action selector="toggleGy" destination="AgC-eL-Hgc" id="pet-XJ-hP6"/>
+                                <segue destination="ZAt-cb-7xv" kind="push" id="Uw0-MV-U5J"/>
+                            </connections>
+                        </button>
+                    </items>
+                    <color key="backgroundColor" red="0.2392186645275774" green="0.30133645588707642" blue="0.62139734455958551" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="220" y="211"/>
+        </scene>
+        <!--Interface Controller-->
+        <scene sceneID="kqc-oi-2kd">
+            <objects>
+                <controller id="ZAt-cb-7xv">
+                    <items>
+                        <label width="121" height="90" alignment="center" text="Hold your wrist to your chest and relax" textAlignment="center" numberOfLines="0" id="LhT-tH-yG4">
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
+                        <button width="123" alignment="center" title="Start Breathing" id="er4-ch-YfN">
+                            <connections>
+                                <segue destination="IOc-s8-I9n" kind="push" id="H3D-Av-fsM"/>
+                            </connections>
+                        </button>
+                    </items>
+                    <color key="backgroundColor" red="0.23921866450000001" green="0.30133645590000002" blue="0.62139734459999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="480" y="209"/>
+        </scene>
+        <!--Record Gyro-->
+        <scene sceneID="pSt-s5-S94">
+            <objects>
+                <controller id="IOc-s8-I9n" customClass="recordGyro" customModule="respiratoryRate_WatchKit_Extension">
+                    <items>
+                        <label width="121" height="90" alignment="center" text="Breathing..." textAlignment="center" numberOfLines="0" id="HX3-12-qIk">
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
+                        <button width="114" alignment="center" title="Continue" id="ybS-Im-HWb">
+                            <connections>
+                                <segue destination="DkC-f1-lMA" kind="push" id="ve8-Ek-I3w"/>
                             </connections>
                         </button>
                     </items>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="220" y="345"/>
+            <point key="canvasLocation" x="736" y="209"/>
+        </scene>
+        <!--Interface Controller-->
+        <scene sceneID="oiC-vu-hsA">
+            <objects>
+                <controller id="DkC-f1-lMA">
+                    <items>
+                        <label width="121" height="58" alignment="center" text="You Results" textAlignment="center" numberOfLines="0" id="MWu-1j-LmF">
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
+                        <label width="121" height="44" alignment="center" text="XX BPM" textAlignment="center" numberOfLines="0" id="ecI-G6-Lvt">
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
+                        <button width="111" alignment="center" title="Try Again" id="Zz4-m1-hl3">
+                            <connections>
+                                <segue destination="ZAt-cb-7xv" kind="push" id="iyA-22-Aeo"/>
+                            </connections>
+                        </button>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="984" y="209"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">
@@ -49,4 +111,7 @@
             <point key="canvasLocation" x="468" y="643"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="iyA-22-Aeo"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -14,40 +14,22 @@ import CoreMotion
 
 class InterfaceController: WKInterfaceController, WCSessionDelegate {
     
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
-    
-    // Receive message from iOS app
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        let received = (message["Count"] as? String)
-    }
-    
-    // Collection rate
+    // TODO: Change these parameters to meet your needs
+    // Collection frequency
     let frameSize = 100.0
+    // Seconds of data per sample
+    let sampleSize = 20
+    
     
     var startTime = 0.0
-    var counter = 0
     var session : WCSession!
     var motionManager = CMMotionManager()
     var countA = 0.0
     var countB = 0.0
     var arrA: [[Double]] = [[], [], [], []]
     var arrB: [[Double]] = [[], [], [], []]
-
-    
-    // Boolean - determine which array to fill
+    var framesSent = 0
     var useA = 1
-    
-    // Boolean - start recording
-    var getGy = 0
-    
-
-    @IBAction func toggleGy() {
-        if (self.getGy == 0) {
-            self.getGy = 1
-        } else {
-            self.getGy = 0
-        }
-    }
     
     
     override func awake(withContext context: Any?) {
@@ -56,12 +38,17 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         session.delegate = self
         session.activate()
         
+        
+        /*
+        
+        
+        
+        
         // Record [frameSize] values per second
         motionManager.gyroUpdateInterval = 1.0/self.frameSize
         
-     
-    
-            if (motionManager.isDeviceMotionAvailable) {
+        if (motionManager.isDeviceMotionAvailable) {
+            if (self.framesSent <= self.sampleSize) {
                 self.motionManager.deviceMotionUpdateInterval = 1.0/self.frameSize
                 self.motionManager.showsDeviceMovementDisplay = true
                 self.motionManager.startDeviceMotionUpdates(to: OperationQueue.current!) {(data, error) in
@@ -76,17 +63,17 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
                                 self.arrA[1].append(myData.rotationRate.x)
                                 self.arrA[2].append(myData.rotationRate.y)
                                 self.arrA[3].append(myData.rotationRate.z)
-                                    self.countA = self.countA + 1
+                                self.countA = self.countA + 1
                             } else {
-                                    // arrA is full
-                                    self.useA = 0
+                                // arrA is full
+                                self.useA = 0
                                 
                                 // start fill arrB
                                 self.arrB[0].append(CFAbsoluteTimeGetCurrent()-self.startTime)
                                 self.arrB[1].append(myData.rotationRate.x)
                                 self.arrB[2].append(myData.rotationRate.y)
                                 self.arrB[3].append(myData.rotationRate.z)
-                                    self.countB = self.countB + 1
+                                self.countB = self.countB + 1
                                 
                                 // send arrA
                                 if (WCSession.default.isReachable) {
@@ -94,12 +81,11 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
                                         print("Error= \(error.localizedDescription)")})
                                     
                                 }
-                                // wipe arrA after sending
-//                                    self.arrA = [[0.0], [0.0], [0.0], [0.0]]
                                 self.arrA = [[], [], [], []]
                                 self.countA = 0.0
-                                print("A")
-                                }
+                                self.framesSent = self.framesSent + 1
+                                
+                            }
                         } else {
                             // Fill arrB, send arrA
                             if self.countB<self.frameSize {
@@ -107,35 +93,47 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
                                 self.arrB[1].append(myData.rotationRate.x)
                                 self.arrB[2].append(myData.rotationRate.y)
                                 self.arrB[3].append(myData.rotationRate.z)
-                                    self.countB = self.countB + 1
+                                self.countB = self.countB + 1
                             } else {
-                                    // arrB is full
-                                    self.useA = 1
+                                // arrB is full
+                                self.useA = 1
                                 
-                                    // start fill arrA
+                                // start fill arrA
                                 self.arrA[0].append(CFAbsoluteTimeGetCurrent()-self.startTime)
                                 self.arrA[1].append(myData.rotationRate.x)
                                 self.arrA[2].append(myData.rotationRate.y)
                                 self.arrA[3].append(myData.rotationRate.z)
-                                    self.countA = self.countA + 1
+                                self.countA = self.countA + 1
                                 
                                 // send arrB
                                 if (WCSession.default.isReachable) {
                                     WCSession.default.sendMessage(["data" : self.arrB], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
                                         print("Error= \(error.localizedDescription)")})
                                 }
-                                    // wipe arrA after sending
-//                                    self.arrB = [[0.0], [0.0], [0.0], [0.0]]
                                 self.arrB = [[], [], [], []]
                                 self.countB = 0.0
-                                }
+                                self.framesSent = self.framesSent + 1
+                            }
                             
                         }
                     }
-                    }
+                }
+            } else {
+                // Already filled full sample
+                
             }
+        }
+ */
     }
-   
+    
+    
+    
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    
+    // Receive message from iOS app
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        let received = (message["Count"] as? String)
+    }
     
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
@@ -146,7 +144,5 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         // This method is called when watch view controller is no longer visible
         super.didDeactivate()
     }
-    
-    
 }
 
