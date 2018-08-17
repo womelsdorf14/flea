@@ -107,63 +107,9 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
                             }
                         }
                     }
-                
                 }
-        }
-            // print("\(self.framesSent) out of \(self.sampleSize)")
-        }
-        
-  /*      // Record [frameSize] values per second
-        motionManager.gyroUpdateInterval = 1.0/self.frameSize
-        if (self.framesSent < self.sampleSize + 1) {
-            if (motionManager.isDeviceMotionAvailable) {
-                    self.motionManager.deviceMotionUpdateInterval = 1.0/self.frameSize
-                    self.motionManager.showsDeviceMovementDisplay = true
-                    self.motionManager.startDeviceMotionUpdates(to: OperationQueue.current!) {(data, error) in
-                        self.startTime = CFAbsoluteTimeGetCurrent()
-                        if let myData = data {
-                            if (self.useA == 1) {
-                                if self.countA<self.frameSize {
-                                    self.fillA(data: myData)
-                                } else {
-                                    // arrA is full
-                                    self.useA = 0
-                                    self.fillB(data: myData)
-                                    
-                                    // send arrA
-                                    if (WCSession.default.isReachable) {
-                                        WCSession.default.sendMessage(["data" : self.arrA], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
-                                            print("Error= \(error.localizedDescription)")})
-                                    }
-                                    self.resetA()
-                                    
-                                }
-                            } else {
-                                if self.countB<self.frameSize {
-                                    self.fillB(data: myData)
-                                } else {
-                                    // arrB is full
-                                    self.useA = 1
-                                    self.fillA(data: myData)
-                                    
-                                    // send arrB
-                                    if (WCSession.default.isReachable) {
-                                        WCSession.default.sendMessage(["data" : self.arrB], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
-                                            print("Error= \(error.localizedDescription)")})
-                                    }
-                                    self.resetB()
-                                }
-                            }
-                        }
-                    }
-                print("\(self.framesSent) out of \(self.sampleSize)")
-                }
-            } else {
-                print("WE DONE")
             }
- 
- 
- */
+        }
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
