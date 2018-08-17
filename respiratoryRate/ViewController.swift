@@ -14,10 +14,10 @@ import SwiftyDropbox
 
 class ViewController: UIViewController, WCSessionDelegate{
     
-    // Change to your OAuth2 token to send to your Dropbox
+// TODO: Change to your OAuth2 token to send to your Dropbox
     var client = DropboxClient(accessToken: "nHJA1I8ybHAAAAAAAAAAr-v1chSEeWDo404949XYcCTUbgiBeDgNHGzpfMqY3tMC")
-   
-    @IBAction func toDropbox(_ sender: Any) {
+    
+    func toDrop() {
         let time = "\(CFAbsoluteTimeGetCurrent())"
         var csvText = "Time,gyX,gyY,gyZ\n"
         let count = arrGy[0].count
@@ -38,7 +38,6 @@ class ViewController: UIViewController, WCSessionDelegate{
                 print(progressData)
         }
     }
-    
     
 
     @IBOutlet var chtChart: LineChartView!
@@ -126,7 +125,9 @@ class ViewController: UIViewController, WCSessionDelegate{
                 self.arrGy[3].append(entry as! Double)
             }
             self.updateGraph()
-
+            if self.count > 19 {
+                self.toDrop()
+            }
         }
     }
     

@@ -20,6 +20,7 @@
 		0F0E201F2118ECAB0007F10F /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0E201E2118ECAB0007F10F /* ExtensionDelegate.swift */; };
 		0F0E20212118ECAB0007F10F /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0E20202118ECAB0007F10F /* NotificationController.swift */; };
 		0F0E20232118ECAB0007F10F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0F0E20222118ECAB0007F10F /* Assets.xcassets */; };
+		0FFD30AB2124BAA800850458 /* recordGyro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD30AA2124BAA800850458 /* recordGyro.swift */; };
 		87B0CE08E1AB1BA1B1A11688 /* Pods_respiratoryRate_WatchKit_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57F93DAB90D8FF6D5504678 /* Pods_respiratoryRate_WatchKit_Extension.framework */; };
 		A15F994273C668DD2889875E /* Pods_respiratoryRate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 406D248724781315ADE57FBB /* Pods_respiratoryRate.framework */; };
 		A42109BDAB4DF8FDB583733C /* Pods_respiratoryRate_WatchKit_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 875EB36DE8C460617CB44345 /* Pods_respiratoryRate_WatchKit_App.framework */; };
@@ -87,6 +88,7 @@
 		0F0E20222118ECAB0007F10F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0F0E20242118ECAB0007F10F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0F0E20252118ECAB0007F10F /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		0FFD30AA2124BAA800850458 /* recordGyro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = recordGyro.swift; sourceTree = "<group>"; };
 		406D248724781315ADE57FBB /* Pods_respiratoryRate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_respiratoryRate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50AA90B1BA478D47DF6E6DFE /* Pods-respiratoryRate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-respiratoryRate.debug.xcconfig"; path = "Pods/Target Support Files/Pods-respiratoryRate/Pods-respiratoryRate.debug.xcconfig"; sourceTree = "<group>"; };
 		7553FD9540FCC611D7055CA8 /* Pods-respiratoryRate WatchKit Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-respiratoryRate WatchKit Extension.release.xcconfig"; path = "Pods/Target Support Files/Pods-respiratoryRate WatchKit Extension/Pods-respiratoryRate WatchKit Extension.release.xcconfig"; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				0F0E201C2118ECAB0007F10F /* InterfaceController.swift */,
+				0FFD30AA2124BAA800850458 /* recordGyro.swift */,
 				0F0E201E2118ECAB0007F10F /* ExtensionDelegate.swift */,
 				0F0E20202118ECAB0007F10F /* NotificationController.swift */,
 				0F0E20222118ECAB0007F10F /* Assets.xcassets */,
@@ -434,6 +437,7 @@
 				0F0E20212118ECAB0007F10F /* NotificationController.swift in Sources */,
 				0F0E201F2118ECAB0007F10F /* ExtensionDelegate.swift in Sources */,
 				0F0E201D2118ECAB0007F10F /* InterfaceController.swift in Sources */,
+				0FFD30AB2124BAA800850458 /* recordGyro.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
