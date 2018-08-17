@@ -127,6 +127,7 @@ class ViewController: UIViewController, WCSessionDelegate{
             self.updateGraph()
             if self.count > 19 {
                 self.toDrop()
+                self.count = 0
             }
         }
     }
