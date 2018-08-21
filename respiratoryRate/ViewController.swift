@@ -21,7 +21,7 @@ class ViewController: UIViewController, WCSessionDelegate{
     // Size of 150 based on 1 breath for max breathing rate 40 bpm (1.5 s/breath, 100 fps)
     let windowSize = 150
     
-    func makeZ() {
+  /*  func makeZ() {
         let count = arrGy[0].count
         var sumX = 0.0
         var sumY = 0.0
@@ -136,6 +136,8 @@ class ViewController: UIViewController, WCSessionDelegate{
         }
     }
     
+    */
+    
 
     @IBOutlet var chtChart: LineChartView!
     
@@ -225,17 +227,33 @@ class ViewController: UIViewController, WCSessionDelegate{
             }
             self.updateGraph()
             if self.count > 19 {
-                self.makeZ()
-                self.makeAvg()
-                self.toDrop_G()
-                self.toDrop_Z()
-                self.toDrop_A()
+//                self.makeZ()
+   //             self.makeAvg()
+         //       self.toDrop_G()
+//                self.toDrop_Z()
+//                self.toDrop_A()
                 self.count = 0
             }
         }
     }
     
-
+    @IBAction func dropZ(_ sender: Any) {
+   //     self.toDrop_Z()
+    }
+    
+    @IBAction func dropAvg(_ sender: Any) {
+       // self.toDrop_A()
+    }
+    
+    @IBAction func makeZ(_ sender: Any) {
+       // self.makeZ()
+    }
+    @IBAction func makeA(_ sender: Any) {
+   //     self.makeAvg()
+    }
+    
+    
+    
     
     func session(_ session: WCSession,
                  activationDidCompleteWith activationState: WCSessionActivationState,
