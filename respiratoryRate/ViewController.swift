@@ -21,7 +21,8 @@ class ViewController: UIViewController, WCSessionDelegate{
     // Size of 150 based on 1 breath for max breathing rate 40 bpm (1.5 s/breath, 100 fps)
     let windowSize = 150
     
-  /*  func makeZ() {
+    var zScores: [[Double]] = [[], [], [], []]
+    @IBAction func makeZ(_ sender: Any) {
         let count = arrGy[0].count
         var sumX = 0.0
         var sumY = 0.0
@@ -38,23 +39,38 @@ class ViewController: UIViewController, WCSessionDelegate{
         var stdY = 0.0
         var stdZ = 0.0
         for i in 0..<count {
-            stdX = stdX + pow((arrGy[1][i] - meanX), 2)
-            stdY = stdY + pow((arrGy[2][i] - meanY), 2)
-            stdZ = stdZ + pow((arrGy[3][i] - meanZ), 2)
+            let powX = pow((arrGy[1][i] - meanX), 2)
+            let powY = pow((arrGy[2][i] - meanY), 2)
+            let powZ = pow((arrGy[3][i] - meanZ), 2)
+            stdX = stdX + powX
+            stdY = stdY + powY
+            stdZ = stdZ + powZ
         }
         stdX = pow((stdX / Double(count+1)), 0.5)
         stdY = pow((stdY / Double(count+1)), 0.5)
         stdZ = pow((stdZ / Double(count+1)), 0.5)
-        for i in 0..<count {
-            zScores[0][i] = arrGy[0][i]
-            zScores[1][i] = (arrGy[1][i] - meanX)/stdX
-            zScores[2][i] = (arrGy[2][i] - meanY)/stdY
-            zScores[3][i] = (arrGy[3][i] - meanZ)/stdZ
+        for entry in arrGy[0] as NSArray {
+            self.zScores[0].append(entry as! Double)
+        }
+        for entry in arrGy[1] as NSArray {
+            let zX = ((entry as! Double) - meanX)/stdX
+            self.zScores[1].append(zX)
+        }
+        for entry in arrGy[2] as NSArray {
+            let zY = ((entry as! Double) - meanY)/stdY
+            self.zScores[2].append(zY)
+        }
+        for entry in arrGy[3] as NSArray {
+            let zZ = ((entry as! Double) - meanZ)/stdZ
+            self.zScores[3].append(zZ)
         }
     }
     
-    func makeAvg() {
-        for i in (self.windowSize-1)..<count {
+    var avgWin: [[Double]] = [[], [], [], []]
+    @IBAction func makeA(_ sender: Any) {
+        let count = arrGy[0].count
+        
+        for i in 0..<(count-self.windowSize) {
             var sumX = 0.0
             var sumY = 0.0
             var sumZ = 0.0
@@ -63,38 +79,23 @@ class ViewController: UIViewController, WCSessionDelegate{
                 sumY = sumY + zScores[2][j]
                 sumZ = sumZ + zScores[3][j]
             }
-            avgWin[0][i] = arrGy[0][i]
-            avgWin[1][i] = sumX/Double(self.windowSize)
-            avgWin[2][i] = sumY/Double(self.windowSize)
-            avgWin[3][i] = sumZ/Double(self.windowSize)
+            let avX = sumX/Double(self.windowSize)
+            let avY = sumY/Double(self.windowSize)
+            let avZ = sumZ/Double(self.windowSize)
+            avgWin[0].append(arrGy[0][i])
+            avgWin[1].append(avX)
+            avgWin[2].append(avY)
+            avgWin[3].append(avZ)
         }
+        
+
+        
+        
     }
     
-    func toDrop_A() {
+    @IBAction func sendZ(_ sender: Any) {
         let time = "\(CFAbsoluteTimeGetCurrent())"
-        var csvText = "Time,AvgX,AvgY,AvgZ\n"
-        let count = avgWin[0].count
-        for i in 0..<count {
-            let newLine = "\(avgWin[0][i]),\(avgWin[1][i]),\(avgWin[2][i]),\(avgWin[3][i])\n"
-            csvText.append(newLine)
-        }
-        let fileData = csvText.data(using: String.Encoding.utf8, allowLossyConversion: false)!
-        client.files.upload(path: "/respiratoryRate/avgWin/\(time).csv", input: fileData)
-            .response { response, error in
-                if let response = response {
-                    print(response)
-                } else if let error = error {
-                    print(error)
-                }
-            }
-            .progress { progressData in
-                print(progressData)
-        }
-    }
-    
-    func toDrop_Z() {
-        let time = "\(CFAbsoluteTimeGetCurrent())"
-        var csvText = "Time,zScoreX,zScoreY,zScoreZ\n"
+        var csvText = "Time,zscoreX,zscoreY,zscoreZ\n"
         let count = zScores[0].count
         for i in 0..<count {
             let newLine = "\(zScores[0][i]),\(zScores[1][i]),\(zScores[2][i]),\(zScores[3][i])\n"
@@ -112,6 +113,32 @@ class ViewController: UIViewController, WCSessionDelegate{
             .progress { progressData in
                 print(progressData)
         }
+    }
+    
+    @IBAction func sendA(_ sender: Any) {
+        let time = "\(CFAbsoluteTimeGetCurrent())"
+        var csvText = "Time,zscoreX,zscoreY,zscoreZ\n"
+        let count = avgWin[0].count
+        for i in 0..<count {
+            let newLine = "\(avgWin[0][i]),\(avgWin[1][i]),\(avgWin[2][i]),\(avgWin[3][i])\n"
+            csvText.append(newLine)
+        }
+        let fileData = csvText.data(using: String.Encoding.utf8, allowLossyConversion: false)!
+        client.files.upload(path: "/respiratoryRate/avGs/\(time).csv", input: fileData)
+            .response { response, error in
+                if let response = response {
+                    print(response)
+                } else if let error = error {
+                    print(error)
+                }
+            }
+            .progress { progressData in
+                print(progressData)
+        }
+    }
+    
+    @IBAction func sendG(_ sender: Any) {
+        self.toDrop_G()
     }
     
     func toDrop_G() {
@@ -136,7 +163,7 @@ class ViewController: UIViewController, WCSessionDelegate{
         }
     }
     
-    */
+
     
 
     @IBOutlet var chtChart: LineChartView!
@@ -176,8 +203,6 @@ class ViewController: UIViewController, WCSessionDelegate{
     
     var session : WCSession!
     var arrGy: [[Double]] = [[], [], [], []]
-    var zScores: [[Double]] = [[], [], [], []]
-    var avgWin: [[Double]] = [[], [], [], []]
     var count = 0
     @IBOutlet weak var countL: UILabel!
 
@@ -244,13 +269,7 @@ class ViewController: UIViewController, WCSessionDelegate{
     @IBAction func dropAvg(_ sender: Any) {
        // self.toDrop_A()
     }
-    
-    @IBAction func makeZ(_ sender: Any) {
-       // self.makeZ()
-    }
-    @IBAction func makeA(_ sender: Any) {
-   //     self.makeAvg()
-    }
+
     
     
     
