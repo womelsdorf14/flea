@@ -15,7 +15,7 @@ import SwiftyDropbox
 class ViewController: UIViewController, WCSessionDelegate{
     
 // TODO: Change to your OAuth2 token to send to your Dropbox
-    var client = DropboxClient(accessToken: "O0rjYSZUS9AAAAAAAAACTlsFwgxufsT5OkM5oa7wImJIbkAIQr6f7r3xf6AzQQ3g")
+    var client = DropboxClient(accessToken: "nHJA1I8ybHAAAAAAAAAAuXjJGldGXKUIVUfuirpvlZlG2BTXCVcm-GDXoCbiLiHL")
 
     func send_G() {
         let time = "\(CFAbsoluteTimeGetCurrent())"
