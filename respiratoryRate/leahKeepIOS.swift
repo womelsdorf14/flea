@@ -15,7 +15,7 @@ import SwiftyDropbox
 class llViewController: UIViewController, WCSessionDelegate{
     
     // TODO: Change to your OAuth2 token to send to your Dropbox
-    var client = DropboxClient(accessToken: "O0rjYSZUS9AAAAAAAAACTlsFwgxufsT5OkM5oa7wImJIbkAIQr6f7r3xf6AzQQ3g")
+    // var client = (IF NEEDED, USE VIEW CONTROLLER)
     
     // Size of window for averaging filter
     // Size of 150 based on 1 breath for max breathing rate 40 bpm (1.5 s/breath, 100 fps)
