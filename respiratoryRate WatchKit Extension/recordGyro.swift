@@ -18,7 +18,7 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
     // Collection frequency
     let frameSize = 100.0
 
-    var startTime = 0.0
+    var startTime = CFAbsoluteTimeGetCurrent()
     var session : WCSession!
     var motionManager = CMMotionManager()
     var arr: [[Double]] = [[], [], [], []]
@@ -64,7 +64,7 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
             self.motionManager.deviceMotionUpdateInterval = 1.0/self.frameSize
             self.motionManager.showsDeviceMovementDisplay = true
             self.motionManager.startDeviceMotionUpdates(to: OperationQueue.current!) {(data, error) in
-                self.startTime = CFAbsoluteTimeGetCurrent()
+//                self.startTime = CFAbsoluteTimeGetCurrent()
                 if (self.shouldRec) {
                     if let myData = data {
                         self.fill(data: myData)
