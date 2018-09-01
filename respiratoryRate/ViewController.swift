@@ -37,6 +37,7 @@ class ViewController: UIViewController, WCSessionDelegate{
             .progress { progressData in
                 print(progressData)
         }
+        self.arrGy = [[], [], [], []]
     }
     
    
@@ -77,7 +78,6 @@ class ViewController: UIViewController, WCSessionDelegate{
     var session : WCSession!
     var arrGy: [[Double]] = [[], [], [], []]
     var count = 0
-    @IBOutlet weak var countL: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,7 +99,6 @@ class ViewController: UIViewController, WCSessionDelegate{
             // Instantaneous update
             let array = message["data"] as! NSArray
             self.count = array.count
-            self.countL.text = "\(self.count)"
             for entry in array[0] as! NSArray {
                 self.arrGy[0].append(entry as! Double)
             }
