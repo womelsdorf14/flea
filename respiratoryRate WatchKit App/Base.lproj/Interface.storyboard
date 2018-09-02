@@ -34,7 +34,8 @@
             <objects>
                 <controller id="IOc-s8-I9n" customClass="recordGyro" customModule="respiratoryRate_WatchKit_Extension">
                     <items>
-                        <button width="114" height="51" alignment="center" title="Start Record" id="ybS-Im-HWb">
+                        <button width="114" height="51" alignment="center" title="Start" id="ybS-Im-HWb">
+                            <color key="backgroundColor" red="0.88060637949999998" green="0.49786746549999999" blue="0.21769061670000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="toggleRec" destination="IOc-s8-I9n" id="4IK-ix-VQo"/>
                             </connections>
@@ -46,23 +47,6 @@
                 </controller>
             </objects>
             <point key="canvasLocation" x="475" y="209"/>
-        </scene>
-        <!--Interface Controller-->
-        <scene sceneID="oiC-vu-hsA">
-            <objects>
-                <controller id="DkC-f1-lMA">
-                    <items>
-                        <label width="121" height="58" alignment="center" text="You Results" textAlignment="center" numberOfLines="0" id="MWu-1j-LmF">
-                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
-                        </label>
-                        <label width="121" height="44" alignment="center" text="XX BPM" textAlignment="center" numberOfLines="0" id="ecI-G6-Lvt">
-                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
-                        </label>
-                        <button width="111" alignment="center" title="Try Again" id="Zz4-m1-hl3"/>
-                    </items>
-                </controller>
-            </objects>
-            <point key="canvasLocation" x="763" y="202"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">

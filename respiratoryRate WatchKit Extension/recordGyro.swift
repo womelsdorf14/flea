@@ -18,7 +18,7 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
     // Collection frequency
     let frameSize = 100.0
 
-    var startTime = CFAbsoluteTimeGetCurrent()
+    var startTime = 0.0
     var session : WCSession!
     var motionManager = CMMotionManager()
     var arr: [[Double]] = [[], [], [], []]
@@ -38,6 +38,7 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
                 self.arr = [[], [], [], []]
             }
         } else {
+            self.startTime = CFAbsoluteTimeGetCurrent()
             self.shouldRec = true
             self.togR.setTitle("Stop")
         }
