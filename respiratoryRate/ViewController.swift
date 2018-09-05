@@ -15,10 +15,26 @@ import SwiftyDropbox
 class ViewController: UIViewController, WCSessionDelegate{
     
 // TODO: Change to your OAuth2 token to send to your Dropbox
+    @IBOutlet weak var numFR: UILabel!
+    @IBOutlet weak var cS: UILabel!
+    
+    var part3 = 0
+    
+    
+    // TODO: Change to your OAuth2 token to send to your Dropbox
     var client = DropboxClient(accessToken: "nHJA1I8ybHAAAAAAAAAAuXjJGldGXKUIVUfuirpvlZlG2BTXCVcm-GDXoCbiLiHL")
+    
+    var triName = ""
 
     func send_G() {
-        let time = "\(CFAbsoluteTimeGetCurrent())"
+        if (self.part3 == 1) {
+            self.triName = "\(CFAbsoluteTimeGetCurrent())"
+        }
+        
+        self.cS.text = "SENT \(self.part3)"
+            
+        // let time = "\(CFAbsoluteTimeGetCurrent())"
+        
         var csvText = "Time,gyX,gyY,gyZ\n"
         let count = arrGy[0].count
         for i in 0..<count {
@@ -26,7 +42,7 @@ class ViewController: UIViewController, WCSessionDelegate{
             csvText.append(newLine)
         }
         let fileData = csvText.data(using: String.Encoding.utf8, allowLossyConversion: false)!
-        client.files.upload(path: "/respiratoryRate/dataGy/\(time).csv", input: fileData)
+        client.files.upload(path: "/respiratoryRate/dataGy/\(self.triName)/\(self.part3).csv", input: fileData)
             .response { response, error in
                 if let response = response {
                     print(response)
@@ -37,7 +53,22 @@ class ViewController: UIViewController, WCSessionDelegate{
             .progress { progressData in
                 print(progressData)
         }
-        self.arrGy = [[], [], [], []]
+//            client.files.upload(path: "/respiratoryRate/dataGy/\(time).csv", input: fileData)
+//                .response { response, error in
+//                    if let response = response {
+//                        print(response)
+//                    } else if let error = error {
+//                        print(error)
+//                    }
+//                }
+//                .progress { progressData in
+//                    print(progressData)
+//            }
+        if (self.part3>2) {
+            self.arrGy = [[], [], [], []]
+            self.part3 = 0
+        }
+        
     }
     
    
@@ -112,8 +143,14 @@ class ViewController: UIViewController, WCSessionDelegate{
                 self.arrGy[3].append(entry as! Double)
             }
             self.updateGraph()
+            self.part3 = self.part3 + 1
             self.send_G()
+            print("sent")
+
+            self.numFR.text = "\(self.arrGy[0].count)"
+
         }
+        
         
     }
     
