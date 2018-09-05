@@ -17,6 +17,16 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
 // TODO: Change these parameters to meet your needs
     // Collection frequency
     let frameSize = 100.0
+    
+    
+      // ADDING TODAY FOR FIXED LENGTH !!!
+    // Length of data samples
+    let sampleSize = 60
+    
+    var part3 = 0
+
+    
+
 
     var startTime = 0.0
     var session : WCSession!
@@ -30,26 +40,53 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
         if (self.shouldRec) {
             self.shouldRec = false
             self.togR.setTitle("Start")
-            if (self.arr.count>0) {
+     /*       if (self.arr.count>0) {
                 if (WCSession.default.isReachable) {
                     WCSession.default.sendMessage(["data" : self.arr], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
                         print("Error= \(error.localizedDescription)")})
                 }
                 self.arr = [[], [], [], []]
-            }
+             } */
         } else {
             self.startTime = CFAbsoluteTimeGetCurrent()
             self.shouldRec = true
             self.togR.setTitle("Stop")
         }
+        
+        
+        /*
+         if (self.shouldRec) {
+         self.shouldRec = false
+         self.togR.setTitle("Start")
+         if (self.arr.count>0) {
+         if (WCSession.default.isReachable) {
+         WCSession.default.sendMessage(["data" : self.arr], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
+         print("Error= \(error.localizedDescription)")})
+         }
+         self.arr = [[], [], [], []]
+         }
+         } else {
+         self.startTime = CFAbsoluteTimeGetCurrent()
+         self.shouldRec = true
+         self.togR.setTitle("Stop")
+         }
+         */
     }
     
+    
+    
+    
+    
+    
+    
     func fill(data: CMDeviceMotion) {
+        
         // 2D Array of [[Time], [gyX], [gyY], [gyZ]]
         self.arr[0].append(CFAbsoluteTimeGetCurrent()-self.startTime)
         self.arr[1].append(data.rotationRate.x)
         self.arr[2].append(data.rotationRate.y)
         self.arr[3].append(data.rotationRate.z)
+ 
     }
     
     
@@ -66,9 +103,27 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
             self.motionManager.showsDeviceMovementDisplay = true
             self.motionManager.startDeviceMotionUpdates(to: OperationQueue.current!) {(data, error) in
 //                self.startTime = CFAbsoluteTimeGetCurrent()
-                if (self.shouldRec) {
-                    if let myData = data {
-                        self.fill(data: myData)
+                
+                if (self.part3>2) {
+                    // Already sent all 3 parts. Stop.
+                    self.shouldRec = false
+                    self.part3 = 0
+                    self.togR.setTitle("Start")
+                } else {
+                    if (self.shouldRec) {
+                        if let myData = data {
+                            if self.arr[0].count<(Int(self.frameSize)*self.sampleSize/3) {
+                                self.fill(data: myData)
+                            } else {
+                                if (WCSession.default.isReachable) {
+                                    WCSession.default.sendMessage(["data" : self.arr], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
+                                        print("Error= \(error.localizedDescription)")})
+                                }
+                                WKInterfaceDevice.current().play(.directionUp)
+                                self.arr = [[], [], [], []]
+                                self.part3 = self.part3 + 1
+                            }
+                        }
                     }
                 }
             }
