@@ -119,7 +119,7 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
                                     WCSession.default.sendMessage(["data" : self.arr], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
                                         print("Error= \(error.localizedDescription)")})
                                 }
-                                WKInterfaceDevice.current().play(.directionUp)
+//                                WKInterfaceDevice.current().play(.directionUp)
                                 self.arr = [[], [], [], []]
                                 self.part3 = self.part3 + 1
                             }
