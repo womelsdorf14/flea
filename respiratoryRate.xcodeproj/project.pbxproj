@@ -25,6 +25,7 @@
 		87B0CE08E1AB1BA1B1A11688 /* Pods_respiratoryRate_WatchKit_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57F93DAB90D8FF6D5504678 /* Pods_respiratoryRate_WatchKit_Extension.framework */; };
 		A15F994273C668DD2889875E /* Pods_respiratoryRate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 406D248724781315ADE57FBB /* Pods_respiratoryRate.framework */; };
 		A42109BDAB4DF8FDB583733C /* Pods_respiratoryRate_WatchKit_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 875EB36DE8C460617CB44345 /* Pods_respiratoryRate_WatchKit_App.framework */; };
+		BA41EFA7214C55280022EBE2 /* breathRateAlg.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41EFA6214C55280022EBE2 /* breathRateAlg.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +100,7 @@
 		996D80F275E8DCEBDE71FE8D /* Pods-respiratoryRate WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-respiratoryRate WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-respiratoryRate WatchKit Extension/Pods-respiratoryRate WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		A53C767A4B3B048E5E538A3D /* Pods-respiratoryRate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-respiratoryRate.release.xcconfig"; path = "Pods/Target Support Files/Pods-respiratoryRate/Pods-respiratoryRate.release.xcconfig"; sourceTree = "<group>"; };
 		A57F93DAB90D8FF6D5504678 /* Pods_respiratoryRate_WatchKit_Extension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_respiratoryRate_WatchKit_Extension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA41EFA6214C55280022EBE2 /* breathRateAlg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = breathRateAlg.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +162,7 @@
 				0F0E20002118ECAA0007F10F /* Assets.xcassets */,
 				0F0E20022118ECAA0007F10F /* LaunchScreen.storyboard */,
 				0F0E20052118ECAA0007F10F /* Info.plist */,
+				BA41EFA6214C55280022EBE2 /* breathRateAlg.swift */,
 			);
 			path = respiratoryRate;
 			sourceTree = "<group>";
@@ -429,6 +432,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0F0E1FFC2118ECA50007F10F /* ViewController.swift in Sources */,
+				BA41EFA7214C55280022EBE2 /* breathRateAlg.swift in Sources */,
 				0F0E1FFA2118ECA50007F10F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
