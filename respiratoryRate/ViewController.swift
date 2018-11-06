@@ -5,7 +5,6 @@
 //  Created by Leah Womelsdorf on 8/6/18.
 //  Copyright © 2018 Leah Womelsdorf. All rights reserved.
 //
-
 import UIKit
 import WatchConnectivity
 import Charts
@@ -14,26 +13,25 @@ import SwiftyDropbox
 
 class ViewController: UIViewController, WCSessionDelegate{
     
-    @IBOutlet weak var numFR: UILabel!
-    @IBOutlet weak var cS: UILabel!
-    
-    var part3 = 0
-    
-    
     // TODO: Change to your OAuth2 token to send to your Dropbox
     var client = DropboxClient(accessToken: "O0rjYSZUS9AAAAAAAAACTlsFwgxufsT5OkM5oa7wImJIbkAIQr6f7r3xf6AzQQ3g")
     
-    var triName = ""
-
-    func send_G() {
-        if (self.part3 == 1) {
-            self.triName = "\(CFAbsoluteTimeGetCurrent())"
-        }
-        
-        self.cS.text = "SENT \(self.part3)"
-            
-        // let time = "\(CFAbsoluteTimeGetCurrent())"
-        
+    // # segments of data received from watch to make full sample
+    var goal_received = 3
+    
+    // Initializations
+    var received = 0
+    var session : WCSession!
+    var arrGy: [[Double]] = [[], [], [], []]
+    var count = 0
+    
+    @IBOutlet weak var numFR: UILabel!
+    @IBOutlet weak var cS: UILabel!
+    @IBOutlet var chtChart: LineChartView!
+    
+    func send_data() {
+        self.cS.text = "SENT \(self.received)"
+        let timestamp = "\(CFAbsoluteTimeGetCurrent())"
         var csvText = "Time,gyX,gyY,gyZ\n"
         let count = arrGy[0].count
         for i in 0..<count {
@@ -41,7 +39,7 @@ class ViewController: UIViewController, WCSessionDelegate{
             csvText.append(newLine)
         }
         let fileData = csvText.data(using: String.Encoding.utf8, allowLossyConversion: false)!
-        client.files.upload(path: "/respiratoryRate/dataGy/\(self.triName)/\(self.part3).csv", input: fileData)
+        client.files.upload(path: "/respiratoryRate/dataGy/\(timestamp).csv", input: fileData)
             .response { response, error in
                 if let response = response {
                     print(response)
@@ -52,26 +50,10 @@ class ViewController: UIViewController, WCSessionDelegate{
             .progress { progressData in
                 print(progressData)
         }
-//            client.files.upload(path: "/respiratoryRate/dataGy/\(time).csv", input: fileData)
-//                .response { response, error in
-//                    if let response = response {
-//                        print(response)
-//                    } else if let error = error {
-//                        print(error)
-//                    }
-//                }
-//                .progress { progressData in
-//                    print(progressData)
-//            }
-        if (self.part3>2) {
-            self.arrGy = [[], [], [], []]
-            self.part3 = 0
-        }
-        
+        self.arrGy = [[], [], [], []]
+        self.received = 0
     }
     
-   
-    @IBOutlet var chtChart: LineChartView!
     
     func updateGraph() {
         var lineChartEntryA = [ChartDataEntry]()
@@ -87,7 +69,7 @@ class ViewController: UIViewController, WCSessionDelegate{
             lineChartEntryB.append(valueB)
             lineChartEntryC.append(valueC)
         }
-
+        
         let line1 = LineChartDataSet(values: lineChartEntryA, label: "Number")
         line1.colors = [NSUIColor.green]
         let line2 = LineChartDataSet(values: lineChartEntryB, label: "Number")
@@ -105,10 +87,30 @@ class ViewController: UIViewController, WCSessionDelegate{
         chtChart.chartDescription?.text = "My awesome chart"
     }
     
-    var session : WCSession!
-    var arrGy: [[Double]] = [[], [], [], []]
-    var count = 0
 
+    
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        DispatchQueue.main.async() {
+            // Instantaneous update
+            let array = message["data"] as! NSArray
+            self.count = array.count
+            for entry in array[0] as! NSArray {self.arrGy[0].append(entry as! Double)}
+            for entry in array[1] as! NSArray {self.arrGy[1].append(entry as! Double)}
+            for entry in array[2] as! NSArray {self.arrGy[2].append(entry as! Double)}
+            for entry in array[3] as! NSArray {self.arrGy[3].append(entry as! Double)}
+            self.updateGraph()
+            self.received = self.received + 1
+            self.numFR.text = "\(self.arrGy[0].count)"
+            if (self.received==self.goal_received) {
+                self.send_data()
+                print("sent")
+            }
+        }
+    }
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if WCSession.isSupported() {
@@ -117,46 +119,11 @@ class ViewController: UIViewController, WCSessionDelegate{
             session?.activate()
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        DispatchQueue.main.async() {
-            // Instantaneous update
-            let array = message["data"] as! NSArray
-            self.count = array.count
-            for entry in array[0] as! NSArray {
-                self.arrGy[0].append(entry as! Double)
-            }
-            for entry in array[1] as! NSArray {
-                self.arrGy[1].append(entry as! Double)
-            }
-            for entry in array[2] as! NSArray {
-                self.arrGy[2].append(entry as! Double)
-            }
-            for entry in array[3] as! NSArray {
-                self.arrGy[3].append(entry as! Double)
-            }
-            self.updateGraph()
-            self.part3 = self.part3 + 1
-            self.send_G()
-            print("sent")
-
-            self.numFR.text = "\(self.arrGy[0].count)"
-
-        }
-        
-        
-    }
-    
-
-
-
-    
     
     func session(_ session: WCSession,
                  activationDidCompleteWith activationState: WCSessionActivationState,

@@ -15,80 +15,43 @@ import CoreMotion
 class recordGyro: WKInterfaceController, WCSessionDelegate {
     
 // TODO: Change these parameters to meet your needs
-    // Collection frequency
-    let frameSize = 100.0
+    // Collection frequency (Hz)
+    let frequency = 100.0
     
+    // Seconds of data in sample
+    let sample_size = 60
     
-      // ADDING TODAY FOR FIXED LENGTH !!!
-    // Length of data samples
-    let sampleSize = 60
+    // # segments of data sent to iOS to make samle
+    var segments = 3
     
-    var part3 = 0
-
-    
-
-
+    // Initializations
+    var sent = 0
+    var recording = false
     var startTime = 0.0
     var session : WCSession!
-    var motionManager = CMMotionManager()
+    var motion_manager = CMMotionManager()
     var arr: [[Double]] = [[], [], [], []]
 
-    var shouldRec = false
     @IBOutlet var togR: WKInterfaceButton!
     
-    @IBAction func toggleRec() {
-        if (self.shouldRec) {
-            self.shouldRec = false
+    @IBAction func toggle_record() {
+        if (self.recording) {
+            self.recording = false
             self.togR.setTitle("Start")
-     /*       if (self.arr.count>0) {
-                if (WCSession.default.isReachable) {
-                    WCSession.default.sendMessage(["data" : self.arr], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
-                        print("Error= \(error.localizedDescription)")})
-                }
-                self.arr = [[], [], [], []]
-             } */
         } else {
             self.startTime = CFAbsoluteTimeGetCurrent()
-            self.shouldRec = true
+            self.recording = true
             self.togR.setTitle("Stop")
         }
-        
-        
-        /*
-         if (self.shouldRec) {
-         self.shouldRec = false
-         self.togR.setTitle("Start")
-         if (self.arr.count>0) {
-         if (WCSession.default.isReachable) {
-         WCSession.default.sendMessage(["data" : self.arr], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
-         print("Error= \(error.localizedDescription)")})
-         }
-         self.arr = [[], [], [], []]
-         }
-         } else {
-         self.startTime = CFAbsoluteTimeGetCurrent()
-         self.shouldRec = true
-         self.togR.setTitle("Stop")
-         }
-         */
     }
     
-    
-    
-    
-    
-    
-    
     func fill(data: CMDeviceMotion) {
-        
         // 2D Array of [[Time], [gyX], [gyY], [gyZ]]
         self.arr[0].append(CFAbsoluteTimeGetCurrent()-self.startTime)
         self.arr[1].append(data.rotationRate.x)
         self.arr[2].append(data.rotationRate.y)
         self.arr[3].append(data.rotationRate.z)
- 
     }
-    
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
@@ -96,32 +59,30 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
         session.delegate = self
         session.activate()
 
-        motionManager.gyroUpdateInterval = 1.0/self.frameSize
+        // Collection frequency
+        motion_manager.gyroUpdateInterval = 1.0/self.frequency
         
-        if (motionManager.isDeviceMotionAvailable) {
-            self.motionManager.deviceMotionUpdateInterval = 1.0/self.frameSize
-            self.motionManager.showsDeviceMovementDisplay = true
-            self.motionManager.startDeviceMotionUpdates(to: OperationQueue.current!) {(data, error) in
-//                self.startTime = CFAbsoluteTimeGetCurrent()
-                
-                if (self.part3>2) {
-                    // Already sent all 3 parts. Stop.
-                    self.shouldRec = false
-                    self.part3 = 0
+        if (motion_manager.isDeviceMotionAvailable) {
+            self.motion_manager.deviceMotionUpdateInterval = 1.0/self.frequency
+            self.motion_manager.showsDeviceMovementDisplay = true
+            self.motion_manager.startDeviceMotionUpdates(to: OperationQueue.current!) {(data, error) in
+                if (self.sent>(self.segments-1)) {
+                    // Already sent all segments. Stop.
+                    self.recording = false
+                    self.sent = 0
                     self.togR.setTitle("Start")
                 } else {
-                    if (self.shouldRec) {
+                    if (self.recording) {
                         if let myData = data {
-                            if self.arr[0].count<(Int(self.frameSize)*self.sampleSize/3) {
+                            if self.arr[0].count<(Int(self.frequency)*self.sample_size/self.segments) {
                                 self.fill(data: myData)
                             } else {
                                 if (WCSession.default.isReachable) {
                                     WCSession.default.sendMessage(["data" : self.arr], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
                                         print("Error= \(error.localizedDescription)")})
                                 }
-//                                WKInterfaceDevice.current().play(.directionUp)
                                 self.arr = [[], [], [], []]
-                                self.part3 = self.part3 + 1
+                                self.sent = self.sent + 1
                             }
                         }
                     }

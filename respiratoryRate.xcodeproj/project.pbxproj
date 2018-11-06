@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0F0CF94E21349AF6005CBC40 /* leahKeep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0CF94D21349AF6005CBC40 /* leahKeep.swift */; };
 		0F0E1FFA2118ECA50007F10F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0E1FF92118ECA50007F10F /* AppDelegate.swift */; };
 		0F0E1FFC2118ECA50007F10F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0E1FFB2118ECA50007F10F /* ViewController.swift */; };
 		0F0E1FFF2118ECA50007F10F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0F0E1FFD2118ECA50007F10F /* Main.storyboard */; };
@@ -72,7 +71,6 @@
 
 /* Begin PBXFileReference section */
 		09A2DE85F417092BD4BD0BF0 /* Pods-respiratoryRate WatchKit App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-respiratoryRate WatchKit App.release.xcconfig"; path = "Pods/Target Support Files/Pods-respiratoryRate WatchKit App/Pods-respiratoryRate WatchKit App.release.xcconfig"; sourceTree = "<group>"; };
-		0F0CF94D21349AF6005CBC40 /* leahKeep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = leahKeep.swift; sourceTree = "<group>"; };
 		0F0E1FF62118ECA50007F10F /* respiratoryRate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = respiratoryRate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F0E1FF92118ECA50007F10F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0F0E1FFB2118ECA50007F10F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -182,7 +180,6 @@
 			children = (
 				0F0E201C2118ECAB0007F10F /* InterfaceController.swift */,
 				0FFD30AA2124BAA800850458 /* recordGyro.swift */,
-				0F0CF94D21349AF6005CBC40 /* leahKeep.swift */,
 				0F0E201E2118ECAB0007F10F /* ExtensionDelegate.swift */,
 				0F0E20202118ECAB0007F10F /* NotificationController.swift */,
 				0F0E20222118ECAB0007F10F /* Assets.xcassets */,
@@ -444,7 +441,6 @@
 				0F0E20212118ECAB0007F10F /* NotificationController.swift in Sources */,
 				0F0E201F2118ECAB0007F10F /* ExtensionDelegate.swift in Sources */,
 				0F0E201D2118ECAB0007F10F /* InterfaceController.swift in Sources */,
-				0F0CF94E21349AF6005CBC40 /* leahKeep.swift in Sources */,
 				0FFD30AB2124BAA800850458 /* recordGyro.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
