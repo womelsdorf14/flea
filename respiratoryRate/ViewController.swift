@@ -9,25 +9,37 @@ import UIKit
 import WatchConnectivity
 import Charts
 import SwiftyDropbox
+import Foundation
 
 
 class ViewController: UIViewController, WCSessionDelegate{
+
     
     // TODO: Change to your OAuth2 token to send to your Dropbox
     var client = DropboxClient(accessToken: "O0rjYSZUS9AAAAAAAAACTlsFwgxufsT5OkM5oa7wImJIbkAIQr6f7r3xf6AzQQ3g")
     
     // # segments of data received from watch to make full sample
-    var goal_received = 3
+    var goal_received = 4
     
     // Initializations
-    var received = 0
+    var received = 0; var count = 0; var arrGy: [[Double]] = [[], [], [], []]
     var session : WCSession!
-    var arrGy: [[Double]] = [[], [], [], []]
-    var count = 0
+
+    @IBOutlet weak var rate: UILabel!
+    @IBAction func calculate_Breath(_ sender: Any) {
+        let gyroData3 = [arrGy[1], arrGy[2], arrGy[3]]
+        let breathRateAlg = BreathRateAlg(sampleRate: 100, log2N: Int(round(log2(Double(arrGy[1].count)))))
+        var breathRate = breathRateAlg.getBreathRate(oneFrameArr: gyroData3)
+        rate.text = "\(round(breathRate))"
+        print("\(breathRate)")
+        self.arrGy = [[], [], [], []]
+        self.received = 0
+    }
     
     @IBOutlet weak var numFR: UILabel!
     @IBOutlet weak var cS: UILabel!
     @IBOutlet var chtChart: LineChartView!
+    @IBOutlet weak var bpm_value: UILabel!
     
     func send_data() {
         self.cS.text = "SENT \(self.received)"
@@ -50,8 +62,17 @@ class ViewController: UIViewController, WCSessionDelegate{
             .progress { progressData in
                 print(progressData)
         }
-        self.arrGy = [[], [], [], []]
-        self.received = 0
+        
+        // Calculated breathRate
+        let axis = [arrGy[1],arrGy[2],arrGy[3]]
+        let breath_alg = BreathRateAlg(sampleRate: 100, log2N: Int(round(log2(Double(arrGy[1].count)))))
+        let breathRate = breath_alg.getBreathRate(oneFrameArr: axis)
+        print("\(breathRate)")
+        bpm_value.text = "\(breathRate)"
+        
+        // Testing to see for the button press
+//        self.arrGy = [[], [], [], []]
+//        self.received = 0
     }
     
     

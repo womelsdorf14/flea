@@ -34,14 +34,18 @@
             <objects>
                 <controller id="IOc-s8-I9n" customClass="recordGyro" customModule="respiratoryRate_WatchKit_Extension">
                     <items>
-                        <button width="114" height="51" alignment="center" title="Start" id="ybS-Im-HWb">
-                            <color key="backgroundColor" red="0.88060637949999998" green="0.49786746549999999" blue="0.21769061670000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <button width="125" height="51" alignment="center" verticalAlignment="center" title="Start Session" id="ybS-Im-HWb">
+                            <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                             <connections>
                                 <action selector="toggle_record" destination="IOc-s8-I9n" id="cq8-8E-cft"/>
                             </connections>
                         </button>
+                        <timer width="136" height="33" alignment="center" verticalAlignment="center" textAlignment="center" previewedSeconds="20" id="eBN-1n-JfT">
+                            <calendarUnit key="units" minute="YES" second="YES"/>
+                        </timer>
                     </items>
                     <connections>
+                        <outlet property="breathtimer" destination="eBN-1n-JfT" id="PVD-hP-wH4"/>
                         <outlet property="togR" destination="ybS-Im-HWb" id="8FF-2A-l4S"/>
                     </connections>
                 </controller>

@@ -19,28 +19,29 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
     let frequency = 100.0
     
     // Seconds of data in sample
-    let sample_size = 60
+    let sample_size = 20
     
-    // # segments of data sent to iOS to make samle
-    var segments = 3
+    // # segments of data sent to iOS to make sample (Remember: floating point arithmetic)
+    var segments = 4
     
     // Initializations
-    var sent = 0
-    var recording = false
-    var startTime = 0.0
+    var sent = 0; var startTime = 0.0; var recording = false
+    var arr: [[Double]] = [[], [], [], []]
     var session : WCSession!
     var motion_manager = CMMotionManager()
-    var arr: [[Double]] = [[], [], [], []]
 
+    @IBOutlet var breathtimer: WKInterfaceTimer!
+    
     @IBOutlet var togR: WKInterfaceButton!
     
     @IBAction func toggle_record() {
         if (self.recording) {
             self.recording = false
-            self.togR.setTitle("Start")
+            self.togR.setTitle("Start Session")
         } else {
             self.startTime = CFAbsoluteTimeGetCurrent()
             self.recording = true
+            self.breathtimer.start()
             self.togR.setTitle("Stop")
         }
     }
@@ -60,7 +61,7 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
         session.activate()
 
         // Collection frequency
-        motion_manager.gyroUpdateInterval = 1.0/self.frequency
+//        motion_manager.gyroUpdateInterval = 1.0/self.frequency
         
         if (motion_manager.isDeviceMotionAvailable) {
             self.motion_manager.deviceMotionUpdateInterval = 1.0/self.frequency

@@ -46,12 +46,12 @@ class BreathRateAlg {
     var setup: FFTSetupD
     let BREATHING_FREQ_BAND: [Double] = [0.13, 0.66]
     
-    init(sampleRate: Int) {
+    init(sampleRate: Int, log2N: Int) {
         self.sampleRate = sampleRate
         frameSize = sampleRate * 20 //seconds
         samples = [Double](repeating: 0, count: frameSize)
         AVE_FILTER_WINDOW_SIZE = Int(sampleRate/40)//assume 40 breath per minute, paper
-        setup = vDSP_create_fftsetupD( 11, 0 )! /* supports up to 2048 (2**11) points  */
+        setup = vDSP_create_fftsetupD( vDSP_Length(log2N), 0 )! /* if log2N = 11, supports up to 2048 (2**11) points  */
     }
     func getBreathRate(oneFrameArr: [[Double]]) -> Double {
         var br, br_cur, maxMagnitude, magnitude_cur: Double
