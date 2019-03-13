@@ -39,6 +39,8 @@ import Foundation
 import Accelerate
 
 class BreathRateAlg {
+    
+    let log2N: Int
     var sampleRate: Int
     var frameSize: Int
     var samples = [Double]()
@@ -46,13 +48,22 @@ class BreathRateAlg {
     var setup: FFTSetupD
     let BREATHING_FREQ_BAND: [Double] = [0.13, 0.66]
     
-    init(sampleRate: Int, log2N: Int) {
+    init(sampleRate: Int, log2N: Int, size: Int) {
         self.sampleRate = sampleRate
-        frameSize = sampleRate * 20 //seconds
+        self.log2N = log2N
+        
+//        frameSize = Int(Double(sampleRate) * 81.92) //seconds
+        frameSize = Int(Double(sampleRate) * 20.48 * Double(size)) //seconds
         samples = [Double](repeating: 0, count: frameSize)
-        AVE_FILTER_WINDOW_SIZE = Int(sampleRate/40)//assume 40 breath per minute, paper
+        AVE_FILTER_WINDOW_SIZE = Int(1.5*Double(sampleRate)) // assume 40 breath per minute, so 1.5s/breath, paper
         setup = vDSP_create_fftsetupD( vDSP_Length(log2N), 0 )! /* if log2N = 11, supports up to 2048 (2**11) points  */
+        /* if log2N = 13, supports up to 8192 (2**13) points  */
     }
+    
+    func destroy() {
+        vDSP_destroy_fftsetupD(setup)
+    }
+
     func getBreathRate(oneFrameArr: [[Double]]) -> Double {
         var br, br_cur, maxMagnitude, magnitude_cur: Double
         maxMagnitude = 0
@@ -93,9 +104,10 @@ class BreathRateAlg {
             samples = samples.map { $0 - mean }//avoid dividing zero
         }
     }
+    
     func averagingFilter() {
         if AVE_FILTER_WINDOW_SIZE == 0 {
-            NSLog("no avg filter applied, because window size = \(frameSize)/40 = 0")
+            NSLog("no avg filter applied, because window size = Int(1.5 * \(sampleRate). Correlates with 1 breath @ 40 bpm pace")
             return
         }else {
             samples = (0..<frameSize).compactMap { index -> (Double)? in
@@ -114,7 +126,7 @@ class BreathRateAlg {
         var zeroArray = [Double](repeating:0.0, count:cnt)
         var splitComplexInput = DSPDoubleSplitComplex(realp: &samples, imagp: &zeroArray)
         
-        vDSP_fft_zripD(self.setup, &splitComplexInput, 1, 11, FFTDirection(FFT_FORWARD));
+        vDSP_fft_zripD(self.setup, &splitComplexInput, 1, vDSP_Length(self.log2N), FFTDirection(FFT_FORWARD));
         vDSP_zvmagsD(&splitComplexInput, 1, &fftMagnitudes, 1, vDSP_Length(cnt));
         
         // vDSP_zvmagsD returns squares of the FFT magnitudes, so take the root here
@@ -124,18 +136,16 @@ class BreathRateAlg {
         //var normalizedValues = [Double](repeating:0.0, count:cnt)
         //vDSP_vsmulD(roots, vDSP_Stride(1), [2.0 / Double(cnt)], &normalizedValues, vDSP_Stride(1), vDSP_Length(cnt))
         
-        //bandpass filter
-        let bandwidth: Double =  Double(self.sampleRate) * 2
-        let freqStep: Double = bandwidth / Double(fftMagnitudes.count)
-        let freqBandIdx: [Int] = [Int(ceil(BREATHING_FREQ_BAND[0] / freqStep)), Int(ceil(BREATHING_FREQ_BAND[1] / freqStep))]
+        let bin_width: Double =  Double(self.sampleRate)/Double(self.frameSize)
+        let freqBandIdx: [Int] = [Int(ceil(BREATHING_FREQ_BAND[0] / bin_width)-1), Int(ceil(BREATHING_FREQ_BAND[1] / bin_width))]
         let filteredArr = fftMagnitudes[freqBandIdx[0]..<freqBandIdx[1]]
-        
-        //print(freqStep, fftMagnitudes.count, cnt, freqBandIdx[0] , freqBandIdx[1] )
-        //print("max freq no filter",fftMagnitudes.max()!, Double(fftMagnitudes.index(of: fftMagnitudes.max()!)!), Double(fftMagnitudes.index(of: fftMagnitudes.max()!)!) * freqStep)
-        //print("max freq",filteredArr.max()!, filteredArr.index(of: filteredArr.max()!)!, Double(filteredArr.index(of: filteredArr.max()!)!) * freqStep)
-        return (Double(filteredArr.index(of: filteredArr.max()!)!) * freqStep * 60.0, filteredArr.max()!)
+        let offset = Double(freqBandIdx[0])
+     
+        return (((Double(filteredArr.index(of: filteredArr.max()!)!) + offset) * 60.0 * bin_width), filteredArr.max()!)
+       
     }
     
+
 }
 
 

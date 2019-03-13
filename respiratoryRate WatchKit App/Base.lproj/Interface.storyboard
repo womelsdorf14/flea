@@ -18,7 +18,7 @@
                             <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
                         </label>
                         <button width="103" alignment="center" title="Begin" id="epG-NB-HWo">
-                            <color key="backgroundColor" red="0.29803921568627451" green="0.34901960784313724" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <segue destination="IOc-s8-I9n" kind="push" id="MQA-GJ-PS1"/>
                             </connections>
@@ -43,6 +43,11 @@
                         <timer width="136" height="33" alignment="center" verticalAlignment="center" textAlignment="center" previewedSeconds="20" id="eBN-1n-JfT">
                             <calendarUnit key="units" minute="YES" second="YES"/>
                         </timer>
+                        <button width="1" alignment="left" title="STOP ALL" id="mgk-w0-jgU">
+                            <connections>
+                                <action selector="stop_all" destination="IOc-s8-I9n" id="0dd-K5-gp7"/>
+                            </connections>
+                        </button>
                     </items>
                     <connections>
                         <outlet property="breathtimer" destination="eBN-1n-JfT" id="PVD-hP-wH4"/>

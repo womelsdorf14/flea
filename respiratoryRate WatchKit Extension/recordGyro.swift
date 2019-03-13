@@ -15,11 +15,17 @@ import CoreMotion
 class recordGyro: WKInterfaceController, WCSessionDelegate {
     
 // TODO: Change these parameters to meet your needs
-    // Collection frequency (Hz)
-    let frequency = 100.0
     
-    // Seconds of data in sample
-    let sample_size = 20
+    // Note: Original setup: 100Hz for 20.48s.
+    
+    // Collection sample rate (Hz)
+    let sampleRate = 100.0
+    
+    // Minimum # seconds to do FFT (first full frame)
+    let fullFrame = 20.48
+    
+    // First full frame sent, begin sliding window
+    var fullSent = false
     
     // # segments of data sent to iOS to make sample (Remember: floating point arithmetic)
     var segments = 4
@@ -35,16 +41,21 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
     @IBOutlet var togR: WKInterfaceButton!
     
     @IBAction func toggle_record() {
-        if (self.recording) {
-            self.recording = false
-            self.togR.setTitle("Start Session")
-        } else {
-            self.startTime = CFAbsoluteTimeGetCurrent()
-            self.recording = true
-            self.breathtimer.start()
-            self.togR.setTitle("Stop")
-        }
+        self.startTime = CFAbsoluteTimeGetCurrent()
+        self.recording = true
+        self.breathtimer.start()
+        self.togR.setTitle("Recording")
     }
+    
+    @IBAction func stop_all() {
+        self.recording = false
+        self.togR.setTitle("Paused")
+        self.arr = [[], [], [], []]
+        self.sent = 0
+        
+    }
+    
+
     
     func fill(data: CMDeviceMotion) {
         // 2D Array of [[Time], [gyX], [gyY], [gyZ]]
@@ -54,36 +65,33 @@ class recordGyro: WKInterfaceController, WCSessionDelegate {
         self.arr[3].append(data.rotationRate.z)
     }
     
+    func send() {
+        // Send data to corresponding iOS app, reset arr to fill again
+        if (WCSession.default.isReachable) {
+            WCSession.default.sendMessage(["data" : self.arr], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
+                print("Error= \(error.localizedDescription)")})
+        }
+        self.arr = [[], [], [], []]
+    }
+    
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         session = WCSession.default
         session.delegate = self
         session.activate()
-
-        // Collection frequency
-//        motion_manager.gyroUpdateInterval = 1.0/self.frequency
         
         if (motion_manager.isDeviceMotionAvailable) {
-            self.motion_manager.deviceMotionUpdateInterval = 1.0/self.frequency
+            self.motion_manager.deviceMotionUpdateInterval = 1.0/self.sampleRate
             self.motion_manager.showsDeviceMovementDisplay = true
             self.motion_manager.startDeviceMotionUpdates(to: OperationQueue.current!) {(data, error) in
-                if (self.sent>(self.segments-1)) {
-                    // Already sent all segments. Stop.
-                    self.recording = false
-                    self.sent = 0
-                    self.togR.setTitle("Start")
-                } else {
-                    if (self.recording) {
+                if (self.recording) {
+                    if (true) {
+                        // Full frame already sent, send 1 second frames
                         if let myData = data {
-                            if self.arr[0].count<(Int(self.frequency)*self.sample_size/self.segments) {
+                            if (self.arr[0].count<(Int(self.sampleRate))) {
                                 self.fill(data: myData)
                             } else {
-                                if (WCSession.default.isReachable) {
-                                    WCSession.default.sendMessage(["data" : self.arr], replyHandler: nil, errorHandler: {(_ error: Error) -> Void in
-                                        print("Error= \(error.localizedDescription)")})
-                                }
-                                self.arr = [[], [], [], []]
-                                self.sent = self.sent + 1
+                                self.send()
                             }
                         }
                     }
